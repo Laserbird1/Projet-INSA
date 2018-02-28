@@ -2,6 +2,7 @@
 // Chargement des bibliothèques Swing et AWT
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 
 public class FenetreJeu extends JFrame implements ActionListener, MouseListener{
