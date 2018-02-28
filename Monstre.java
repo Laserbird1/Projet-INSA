@@ -1,7 +1,10 @@
 import java.awt.*;
 import javax.swing.*;
+import javax.imageio.*;
+import java.awt.image.*;
+import java.io.*;
 
-public class Monstre{
+public abstract class Monstre{
     int vie;        //points de vie
     int vitesse;    //vitesse de déplacement
     int degats;     //degats infligés lors de la rencontre avec le chateau
@@ -9,6 +12,7 @@ public class Monstre{
     int centrey;    //coord y du centre de gravité
     int L;          //largeur de la hitbox
     int H;          //hauteur de la hitbox
+    BufferedImage image ; //image associee au monstre
     
     Monstre(){
         L=50;//en pixel
