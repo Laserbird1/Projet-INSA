@@ -12,8 +12,6 @@ public class FenetreJeu extends JFrame implements ActionListener, MouseListener{
 	Timer monTimer;
 	long temps;
 	String positionSouris;
-	JTextField textChoix;
-	JTextField affResult;
 	JButton bJouer;
 	JButton bQuitter;
 	JButton bOption;
@@ -85,7 +83,7 @@ public class FenetreJeu extends JFrame implements ActionListener, MouseListener{
 		
 		// Pour rendre la fenêtre visible
 		this.setVisible(true);
-				// Pour permettre la fermeture de la fenêtre lors de l'appui sur la croix rouge
+		// Pour permettre la fermeture de la fenêtre lors de l'appui sur la croix rouge
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	}
