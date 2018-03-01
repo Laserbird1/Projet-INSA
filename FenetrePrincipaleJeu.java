@@ -1,49 +1,33 @@
-// Chargement des bibliothèques Swing et AWT
 import javax.swing.*;
 import java.awt.*;
 
 
-public class FenetrePrincipaleJeu extends JPanel {
-	
-	
+public class FenetrePrincipaleJeu extends JPanel implements ActionListener,MouseListener{
 	
 	public FenetrePrincipaleJeu() {
 		
 		
 		this.setLayout(null);
-		this.setSize(600,600);
-		this.setLocation(400,100);
+		this.setSize(800,600);
+		this.setLocation(0,0);
 		this.setBackground(Color.white);
 		
 		
-		
-		/**
-    	 * Mon panneau Avec la tour
-		 */
-		/*JPanel panelDeJeu = new JPanel();
-		add(panelDeJeu);
-		panelDeJeu.setBounds(0,0,600,400);
-		panelDeJeu.setLayout(null);
-		panelDeJeu.setBackground(Color.white);
-		
-		
-		/**
-    	 * Mon panneau sol
-		 */
+		//panneau au sol
 		JPanel panelSol = new JPanel();
 		add(panelSol);
-		panelSol.setBounds(0,400,600,600);
+		panelSol.setBounds(0,400,800,200);
 		panelSol.setLayout(null);
-		panelSol.setBackground(Color.green);
+		panelSol.setBackground(new Color(160, 82, 45));//couleur sienne
 		
-		/**
-    	 * Mon panneau Tour
-		 */
+		
+    	 	//panneau Tour
+		
 		JPanel panelTour = new JPanel();
 		add(panelTour);
-		panelTour.setBounds(0,0,600,600);
+		panelTour.setBounds(0,0,800,400);
 		panelTour.setLayout(null);
-		panelTour.setBackground(Color.yellow);
+		panelTour.setBackground(new Color(135,206,235));//bleu ciel
 		
 		
 		// Pour rendre la fenêtre visible
@@ -51,6 +35,14 @@ public class FenetrePrincipaleJeu extends JPanel {
 		
 		
 	}
+	
+	public void actionPerformed(ActionEvent e){}
+	
+	public void mouseReleased(MouseEvent e){}
+	public void mouseEntered(MouseEvent e){}
+	public void mouseExited(MouseEvent e){}
+	public void mouseClicked(MouseEvent e){}
+	public void mousePressed(MouseEvent e){}
 	
 	
 
