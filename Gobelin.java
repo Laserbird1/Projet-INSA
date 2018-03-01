@@ -10,10 +10,11 @@ public class Gobelin extends Monstre{
     Gobelin(){
         super();
         this.vie=2;
-        this.vitesse=50;
+        this.vitesse=10;
         this.degats=1;
         this.centrex=600;///a initialiser proprement
         this.centrey=590;///a initialiser proprement
+        this.couleur=Color.black;
         
     }
     
