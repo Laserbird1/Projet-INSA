@@ -24,11 +24,8 @@ public class Pierre extends Projectile{
     }
     
     public void dessin(Graphics g){
-        int x = (int)(centrex);
-        int y = (int)(centrey);
-        int l = (int)(2*R);
-        int h = (int)(2*R);
-        g.drawOval(x,y,l,h);
+        g.setColor(new Color(192, 192, 192));//gris argent
+        g.drawOval(centrex,centrey,2*R,2*R);
     }
     
     public boolean collisionMonstre(Monstre monster){
