@@ -58,5 +58,33 @@ public class Chateau{
         
     }
     
+    public void combat () {
+		for(Monstre monstre: listEnemis){		
+			monstre.move();
+		}
+		
+		for (Projectile projectile : listArmes){	
+			projectile.move();
+			if(projectile.collisionTerrain(this)){
+				listArmes.remove(projectile);
+				//supprime projectile
+			}
+		}
+		
+		for(Monstre monstre: listEnemis){
+			for (Projectile projectile : listArmes){
+				if(projectile.collisionMonstre(listEnemis)){
+					// supprime monstre + projectile de la linkedlist
+				}
+				
+		    }
+			if(monstre.collisionChateau(this)){
+				vie-=monstre.degats;
+				//et supprime monstre
+				listEnemis.remove(monstre);
+			}	
+		}
+	
+	} 
     
 }
