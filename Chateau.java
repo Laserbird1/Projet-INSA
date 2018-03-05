@@ -38,9 +38,6 @@ public class Chateau{
         g.setColor(new Color(58, 157, 35));                                  //vert gazon
         g.fillRect(0,(int)(4*H_TERRAIN/6),L_TERRAIN,(int)(H_TERRAIN/6));     //pour les arbres
         
-        g.setColor(new Color(135,206,235));                                  //bleu ciel
-        g.fillRect(0,0,L_TERRAIN,(int)(4*H_TERRAIN/6));                      //pour le ciel
-        
         g.setColor(new Color(169,169,169));           //couleur gris foncé
         g.fillRect(0,H_TERRAIN-H,L,H);                //chateau a gauche
         
