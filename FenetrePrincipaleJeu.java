@@ -1,22 +1,21 @@
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 
-public class FenetrePrincipaleJeu extends JPanel implements ActionListener,MouseListener{
+public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseListener{
 	
-	public FenetrePrincipaleJeu() {
+	
+	public PanelPrincipalJeu(int L, int H) {
 		
 		
 		this.setLayout(null);
-		this.setSize(800,600);
-		this.setLocation(0,0);
-		this.setBackground(Color.white);
+		this.setSize(L,H);
 		
 		
 		//panneau au sol
 		JPanel panelSol = new JPanel();
 		add(panelSol);
-		panelSol.setBounds(0,400,800,200);
+		panelSol.setBounds(0,(int)(5*H/6),L,(H/6));
 		panelSol.setLayout(null);
 		panelSol.setBackground(new Color(160, 82, 45));//couleur sienne
 		
@@ -25,7 +24,7 @@ public class FenetrePrincipaleJeu extends JPanel implements ActionListener,Mouse
 		
 		JPanel panelTour = new JPanel();
 		add(panelTour);
-		panelTour.setBounds(0,0,800,400);
+		panelTour.setBounds(0,0,L,(int)(5*H/6));
 		panelTour.setLayout(null);
 		panelTour.setBackground(new Color(135,206,235));//bleu ciel
 		
