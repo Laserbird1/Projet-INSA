@@ -1,54 +1,43 @@
-
 // Chargement des bibliothèques Swing et AWT
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 
-public class FenetreJeu extends JFrame implements ActionListener, MouseListener{
+public class FenetreJeu extends JFrame implements ActionListener{
 	
 	// Les Widgets à déclarer en dehors du constructeur
-	
-	Timer monTimer;
-	long temps;
-	String positionSouris;
 	JButton bJouer;
 	JButton bQuitter;
-	JButton bOption;
+	JButton bOptions;
+	JPanel panelMenu;
+	PanelPrincipalJeu panelJeu;
+	PanelOptions panelOptions;
 	
-		
 	public FenetreJeu(){
+
+		int L = (int)getToolkit().getScreenSize().getWidth();
+		int H = ((int)getToolkit().getScreenSize().getHeight() - 45);
+		
+		int tailleButtonL=(int)(L/12);
+		int tailleButtonH=(int)(H/12);
+		
+		
 
 		this.setTitle("Jeu Tower defense  ");
 		this.setLayout(null);
-		this.setSize(600,600);
-		this.setLocation(400,100);
+		this.setSize(L, H);
 		// Pour empêcher le redimensionnement de la fenêtre
 		this.setResizable(false);
 		
-		// Pour gérer le temps
-		monTimer = new Timer(100, this);
-		//monTimer.start();
-		temps=0;
 		
-		// Ecouteur Souris
-		positionSouris="x / y";
-		addMouseListener(this);
-		
-		
-
-		
-	
-	
-	
 	
 	
 		/**
     	 * Mon panneau Jeu
 		 */
-		JPanel panelMenu = new JPanel();
+		panelMenu = new JPanel();
 		add(panelMenu);
-		panelMenu.setBounds(0,0,600,600);
 		panelMenu.setLayout(null);
 		panelMenu.setBackground(Color.white);
 		
@@ -56,29 +45,36 @@ public class FenetreJeu extends JFrame implements ActionListener, MouseListener{
 	
 	
 		bJouer = new JButton("Jouer");
-		bJouer.setBounds(250,300,100,50);
+		bJouer.setBounds((int)(L/2-tailleButtonL/2),(int)(H/4+tailleButtonH/2),tailleButtonL,tailleButtonH);
 		bJouer.setBackground(Color.white);
 		bJouer.setForeground(Color.black);
 		/* branchement de l'écouteur*/
 		bJouer.addActionListener(this);
 		
 		bQuitter = new JButton("Quitter");
-		bQuitter.setBounds(250,360,100,50);
+		bQuitter.setBounds((int)(L/2-tailleButtonL/2),(int)(H/4+2*tailleButtonH),tailleButtonL,tailleButtonH);
 		bQuitter.setBackground(Color.white);
 		bQuitter.setForeground(Color.black);
 		/* branchement de l'écouteur*/
 		bQuitter.addActionListener(this);
 		
 		
-		bOption = new JButton("Option");
-		bOption.setBounds(250,420,100,50);
-		bOption.setBackground(Color.white);
-		bOption.setForeground(Color.black);
+		bOptions = new JButton("Options");
+		bOptions.setBounds((int)(L/2-tailleButtonL/2),(int)(H/4+7*tailleButtonH/2),tailleButtonL,tailleButtonH);
+		bOptions.setBackground(Color.white);
+		bOptions.setForeground(Color.black);
 		/* branchement de l'écouteur*/
-		bOption.addActionListener(this);
+		bOptions.addActionListener(this);
+		
 		panelMenu.add(bJouer);
 		panelMenu.add(bQuitter);
-		panelMenu.add(bOption);
+		panelMenu.add(bOptions);
+		
+		panelJeu = new PanelPrincipalJeu(L,H);
+		panelOptions = new PanelOptions(L,H);
+	
+		
+		setContentPane(panelMenu);
 		
 		
 		// Pour rendre la fenêtre visible
@@ -88,31 +84,30 @@ public class FenetreJeu extends JFrame implements ActionListener, MouseListener{
 		
 	}
 	
-	/**
-	 * Pour faire des dessins simples
-	 * @param l'objet graphics
-	 */ 
-	
-	
-	public void mouseReleased(MouseEvent e){};
-	public void mouseEntered(MouseEvent e){};
-	public void mouseExited(MouseEvent e){};
-	public void mouseClicked(MouseEvent e){
-		monTimer.start();
-		positionSouris="x = "+e.getX()+" / y = "+e.getY();
-	}
-	public void mousePressed(MouseEvent e){};
 	
 	
 	
 	
-	/**
-	 * 
-	 */
+	
+	
 	public void actionPerformed(ActionEvent e){
 		
+		if(e.getSource()== bJouer){
+			this.setContentPane(panelJeu);
+		}
+		
+		if(e.getSource()== bQuitter){
+			//demander au prof
+		}
+		if(e.getSource()==bOptions){
+			
+			this.setContentPane(panelOptions);
+		}
 		
 	}
 	
+	public static void main (String [] args){
+		FenetreJeu maFenetre = new FenetreJeu();
+	}
 	
 }
