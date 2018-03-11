@@ -70,8 +70,8 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		panelMenu.add(bQuitter);
 		panelMenu.add(bOptions);
 		
-		panelJeu = new PanelPrincipalJeu(L,H);
-		panelOptions = new PanelOptions(L,H);
+		panelJeu = new PanelPrincipalJeu(L,H,this);
+		panelOptions = new PanelOptions(L,H,this);
 	
 		
 		setContentPane(panelMenu);
