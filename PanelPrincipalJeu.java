@@ -8,7 +8,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 	JButton bMenu;
 	FenetreJeu Frame;
 	
-	public PanelPrincipalJeu(int L, int H) {
+	public PanelPrincipalJeu(int L, int H,FenetreJeu Frame) {
 		
 		this.Frame=Frame;
 		this.setLayout(null);
