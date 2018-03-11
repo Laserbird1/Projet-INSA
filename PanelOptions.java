@@ -8,7 +8,7 @@ public class PanelOptions extends JPanel implements ActionListener {
 	FenetreJeu Frame;
     	JButton bMenu;
 	
-	public PanelOptions (int L,int H) {
+	public PanelOptions (int L,int H, FenetreJeu Frame) {
 		
 	 	this.Frame=Frame;
         
