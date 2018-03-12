@@ -24,6 +24,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     boolean shooting;//est on en train de tirer
     long temps1;//utile pour le temps de reload d'une arme
     boolean shootReady;
+    String arme;
     
 	public PanelPrincipalJeu(int L, int H,FenetreJeu Frame) {
 		
@@ -33,11 +34,13 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         temps=-40;
         shooting=false;
         shootReady=true;
-		this.setLayout(null);
-		this.setSize(L,H);
+	arme="fleche";
 		
-		H_SOL=(int)(H/6);
-		H_TERRAIN=H-H_SOL;
+	this.setLayout(null);
+	this.setSize(L,H);
+		
+	H_SOL=(int)(H/6);
+	H_TERRAIN=H-H_SOL;
         this.L=L;
         this.H=H;
         
@@ -162,7 +165,12 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
             
             double tetaIni = Math.atan2(y,x); //teta=atan2(x,y)
             
+            if(arme=="pierre")
             monProj=new Pierre(tetaIni,VIni,(int)(L/50),castle.L,castle.H_TERRAIN-castle.H);
+            else if(arme=="fleche")
+            monProj=new Fleche(tetaIni,VIni,(int)(L/25),castle.L,castle.H_TERRAIN-castle.H);
+            else
+            monProj=new Fleche(tetaIni,VIni,(int)(L/25),castle.L,castle.H_TERRAIN-castle.H);
             
             castle.listArmes.add(monProj);//ajout du nouveau projectile 
             shootReady=false;
