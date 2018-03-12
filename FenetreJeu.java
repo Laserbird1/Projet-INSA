@@ -88,6 +88,7 @@ public class FenetreJeu extends JFrame implements ActionListener{
         }
 		
 		if(e.getSource()== bQuitter){
+			System.exit(0);
 			//demander au prof
 		}//quitter le programme
         
