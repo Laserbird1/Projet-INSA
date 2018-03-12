@@ -27,7 +27,7 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		this.setTitle("Jeu Tower defense  ");
 		this.setLayout(null);
 		this.setSize(L, H);
-		// Pour empêcher le redimensionnement de la fenêtre
+		// Pour empêcher le redimensionnement de la fenêtre sinon c'est vraiment relou
 		this.setResizable(false);
 		
 		
@@ -39,75 +39,68 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		panelMenu = new JPanel();
 		add(panelMenu);
 		panelMenu.setLayout(null);
-		panelMenu.setBackground(Color.white);
+		panelMenu.setBackground(Color.white);//panel de menu pour choisir de jouer quitter ou options
 		
 	
 	
-	
+        //bouton jouer
 		bJouer = new JButton("Jouer");
 		bJouer.setBounds((int)(L/2-tailleButtonL/2),(int)(H/4+tailleButtonH/2),tailleButtonL,tailleButtonH);
 		bJouer.setBackground(Color.white);
 		bJouer.setForeground(Color.black);
-		/* branchement de l'écouteur*/
 		bJouer.addActionListener(this);
 		
+        //bouton quitter
 		bQuitter = new JButton("Quitter");
 		bQuitter.setBounds((int)(L/2-tailleButtonL/2),(int)(H/4+2*tailleButtonH),tailleButtonL,tailleButtonH);
 		bQuitter.setBackground(Color.white);
 		bQuitter.setForeground(Color.black);
-		/* branchement de l'écouteur*/
 		bQuitter.addActionListener(this);
 		
-		
+		//bouton option
 		bOptions = new JButton("Options");
 		bOptions.setBounds((int)(L/2-tailleButtonL/2),(int)(H/4+7*tailleButtonH/2),tailleButtonL,tailleButtonH);
 		bOptions.setBackground(Color.white);
 		bOptions.setForeground(Color.black);
-		/* branchement de l'écouteur*/
 		bOptions.addActionListener(this);
 		
 		panelMenu.add(bJouer);
 		panelMenu.add(bQuitter);
-		panelMenu.add(bOptions);
+		panelMenu.add(bOptions);//ajout des bouton au panel de menu
 		
 		panelJeu = new PanelPrincipalJeu(L,H,this);
-		panelOptions = new PanelOptions(L,H,this);
+		panelOptions = new PanelOptions(L,H,this);//ajout de tous les panels a la fenetre, puis accès a chacun lors de setContentPane
 	
 		
-		setContentPane(panelMenu);
+		setContentPane(panelMenu);//accès panel menu
 		
-		
-		// Pour rendre la fenêtre visible
 		this.setVisible(true);
-		// Pour permettre la fermeture de la fenêtre lors de l'appui sur la croix rouge
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	}
-	
-	
-	
-	
-	
-	
+    
 	
 	public void actionPerformed(ActionEvent e){
 		
 		if(e.getSource()== bJouer){
-			this.setContentPane(panelJeu);
-		}
+			panelJeu.t.start();
+            this.setContentPane(panelJeu);//accès au panel de jeu
+        }
 		
 		if(e.getSource()== bQuitter){
 			//demander au prof
-		}
+		}//quitter le programme
+        
 		if(e.getSource()==bOptions){
 			
-			this.setContentPane(panelOptions);
+			this.setContentPane(panelOptions);//accès aux options
 		}
 		
 	}
 	
 	public static void main (String [] args){
-		FenetreJeu maFenetre = new FenetreJeu();
+		FenetreJeu maFenetre = new FenetreJeu();//executer la fenetre
 	}
 	
 }
+
