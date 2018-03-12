@@ -41,7 +41,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         shooting=false;
         shootReady=true;
 	playing=false;
-	arme="fleche";
+	arme="Fleche";
 		
 	this.setLayout(null);
 	this.setSize(L,H);
@@ -230,9 +230,9 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
             
             double tetaIni = Math.atan2(y,x); //teta=atan2(x,y)
             
-            if(arme=="pierre")
+            if(arme=="Pierre")
             monProj=new Pierre(tetaIni,VIni,(int)(L/50),castle.L,castle.H_TERRAIN-castle.H);
-            else if(arme=="fleche")
+            else if(arme=="Fleche")
             monProj=new Fleche(tetaIni,VIni,(int)(L/25),castle.L,castle.H_TERRAIN-castle.H);
             else
             monProj=new Fleche(tetaIni,VIni,(int)(L/25),castle.L,castle.H_TERRAIN-castle.H);
