@@ -93,36 +93,41 @@ public class Chateau{
         }
     }
     
-    public void collisions(){
-       if(listEnemis.size()!=0){ 
-            for(Monstre monster:listEnemis){//pour tous les monstres
-                if(monster.collisionChateau(this)){//touchent t ils le chateau?
-                    vie-=monster.degats;
-                    listEnemis.remove(monster);//si oui il fait des degats et disparait
-                    break;
+    public boolean collisions(){//le booleen retourne la defaite si le chateau n'a plus de vie
+            boolean res=false;
+
+            if(listArmes.size()!=0){
+                for(Projectile proj: listArmes){//pour tous les projectiles
+                    if(proj.collisionTerrain(this)){//le projectile touche t il le sol ?
+                        listArmes.remove(proj);//si oui le projectile disparait
+                        break;
+                    }
+
+                    for(Monstre monster:listEnemis){//pour ce projectile et chaque monstre
+                        if(proj.collisionMonstre(monster)){//le projectile touche t il un monstre ?
+                            monster.vie-=proj.degats;
+                            if(monster.vie<=0) listEnemis.remove(monster);//si oui le monstre perd de la vie et peut disparaitre 
+                            listArmes.remove(proj);//le projectile disparait
+                            break;
+                        }
+                    }
                 }
             }
-        }
-        
-        if(listArmes.size()!=0){
-            for(Projectile proj: listArmes){//pour tous les projectiles
-                if(proj.collisionTerrain(this)){//le projectile touche t il le sol ?
-                    listArmes.remove(proj);//si oui le projectile disparait
-                    break;
-                }
-                
-                for(Monstre monster:listEnemis){//pour ce projectile et chaque monstre
-                    if(proj.collisionMonstre(monster)){//le projectile touche t il un monstre ?
-                        monster.vie-=proj.degats;
-                        if(monster.vie<=0) listEnemis.remove(monster);
-                        listArmes.remove(proj);//si oui le monstre perd de la vie et peut disparaitre 
+
+            if(listEnemis.size()!=0){ 
+                for(Monstre monster:listEnemis){//pour tous les monstres
+                    if(monster.collisionChateau(this)){//touchent t ils le chateau?
+                        vie-=monster.degats;
+                        listEnemis.remove(monster);//si oui il fait des degats et disparait
+                        if(vie<=0) res= true;
                         break;
                     }
                 }
             }
+
+            return res;
+
         }
-        
-    }
     
     
 }
