@@ -31,8 +31,10 @@ public abstract class Projectile {
         centrey+=vitessey;      
     }
     
+    public abstract void dessin(Graphics g);
     public abstract boolean collisionMonstre(Monstre monster);
     public abstract boolean collisionTerrain(Chateau castle);
     
     
 }
+
