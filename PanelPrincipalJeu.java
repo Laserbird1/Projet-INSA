@@ -66,7 +66,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 		
 		castle= new Chateau(L,H_TERRAIN,H_SOL);
         addMouseListener(this);
-        addMouseListener(this);
+        addMouseMotionListener(this);
         
         t=new Timer(40,this);
 		
@@ -118,13 +118,8 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 
             g2.setColor(new Color(204,0,102));
             g2.setStroke(new BasicStroke(10));
-            //g2.draw(new Line2D.Float(30, 20, 80, 90));
             g2.draw(new Line2D.Float(XMouse0,YMouse0,XMouse1,YMouse1));
-            System.out.println
             
-            //
-            //g.setColor(Color.RED);
-            //g.drawLine(XMouse0,YMouse0,XMouse1,YMouse1);
         }//dessin de la ligne pour le tir, aide au tir
     }
 	
