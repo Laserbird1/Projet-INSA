@@ -7,11 +7,12 @@ import java.io.*;
 
 public class Gobelin extends Monstre{
     
-    Gobelin(int centrex, int centrey){
-        super();
-        this.vie=2;
-        this.vitesse=10;
-        this.degats=1;
+    Gobelin(double centrex, double centrey,int L,int H,double vitesse){
+        super(L,H);
+        this.VIE_MAX=4;
+        this.vie=VIE_MAX;
+        this.vitesse=vitesse;
+        this.degats=3;
         this.centrex=centrex;
         this.centrey=centrey;
         this.couleur=Color.black;
@@ -19,4 +20,7 @@ public class Gobelin extends Monstre{
     }
     
     
+    
+    
 }
+
