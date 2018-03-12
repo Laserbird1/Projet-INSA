@@ -8,7 +8,7 @@ import java.awt.image.*;
 public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseListener,MouseMotionListener{
 	
     JButton bMenu;
-	FenetreJeu Frame;
+    FenetreJeu Frame;
     Chateau castle;
     Timer t;
     long temps; //temps qui passe
@@ -26,14 +26,19 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     boolean shootReady;
     String arme;
     
+    boolean playing;//pour faire pause
+    JLabel labelPause;
+    JButton bPause;
+    
 	public PanelPrincipalJeu(int L, int H,FenetreJeu Frame) {
 		
         //initialisation paramètres
         
-		this.Frame=Frame;
+	this.Frame=Frame;
         temps=-40;
         shooting=false;
         shootReady=true;
+	playing=false;
 	arme="fleche";
 		
 	this.setLayout(null);
@@ -56,6 +61,17 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         bMenu.setBounds((int)(L*7/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*2/8));
         bMenu.addActionListener(this);
         add(bMenu);
+	
+	labelPause = new JLabel("Appuyer sur start pour jouer");
+	labelPause.setBounds((int)(L/2),(int)((H_TERRAIN+H_SOL)/2),(int)(L*8/16),(int)(H_SOL));
+	Font parametre = new Font("Arial",Font.BOLD,75);
+	labelPause.setFont(parametre);
+	add(labelPause);
+        
+        bPause=new JButton("Start");//bouton start/pause
+        bPause.setBounds((int)(L*6/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*2/8));
+        bPause.addActionListener(this);
+        add(bPause);
 		
     	 	//panneau Tour
 		
@@ -67,54 +83,83 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 		panelTerrain.setBackground(new Color(135,206,235));//bleu ciel
         */
 		
-		castle= new Chateau(L,H_TERRAIN,H_SOL);
+	castle= new Chateau(L,H_TERRAIN,H_SOL);
         addMouseListener(this);
         addMouseMotionListener(this);
         
         t=new Timer(40,this);
 		
-		// Pour rendre la fenêtre visible
-		this.setVisible(true);
+	// Pour rendre la fenêtre visible
+	this.setVisible(true);
 		
 		
 	}
 	
+	public void reset(){//pour recommencer le jeu
+        	castle.vie=castle.VIE_MAX;
+        	castle.listEnemis.clear();
+        	castle.listArmes.clear();
+       	 	pause();
+        	labelPause.setText("Appuyer sur start pour jouer");
+   	 }
+    
+   	 public void pauseJouer(){
+       		if(playing) pause();
+        	else jouer();
+   	 }
+    
+    	public void pause(){
+        	t.stop();
+        	bPause.setText("Start");
+       		labelPause.setText("Pause");
+        	labelPause.setVisible(true);
+        	playing=false;
+   	 }
+   	public void jouer(){
+        	t.start();
+        	bPause.setText("Pause");
+        	labelPause.setVisible(false);
+        	playing=true;
+   	}
+	
 	public void actionPerformed(ActionEvent e){
         
-        if(e.getSource()==bMenu){
-            Frame.setContentPane(Frame.panelMenu);
-            t.stop();
-        }//si bMenu, retour menu et pause dans le jeu
+        	if(e.getSource()==bMenu){
+            		Frame.setContentPane(Frame.panelMenu);
+            		t.stop();
+        	}//si bMenu, retour menu et pause dans le jeu
+		
+		if(e.getSource()==bPause){
+            		pauseJouer();
+        	}
         
-        if(e.getSource()==t){
+        	if(e.getSource()==t){
             
-            temps+=40;//temps defile
-            castle.move();//tout bouge
+           		temps+=40;//temps defile
+            		castle.move();//tout bouge
             
-            if(temps%8000==0){//toutes les 8 sec
-                Monstre newMonstre;
+            	if(temps%8000==0){//toutes les 8 sec
+                	Monstre newMonstre;
                 
-                newMonstre = new Gobelin(L-10,H_TERRAIN*7/8,(int)(L/15),(int)(H_TERRAIN/10),L/500);
-                
-                castle.listEnemis.add(newMonstre);//creer un monstre
-            }
-            
-            castle.collisions();//tester les collisions
-            
-            
-            repaint();
-        }
+			newMonstre = new Gobelin(L-10,H_TERRAIN*7/8,(int)(L/15),(int)(H_TERRAIN/10),L/500);
+
+			castle.listEnemis.add(newMonstre);//creer un monstre
+		}
+
+		if(castle.collisions()){//tester les collisions
+			pause();
+			Frame.setContentPane(Frame.panelDefaite);//si on a plus de vie, afficher le panel defaite
+		}
+			
+		    repaint();
+		}
         
-        if(!shootReady && temps>temps1) shootReady=true;//si on a passé le temps de reload
-                                                        // et qu'il était pas pret a tirer alors on est re-pret a tirer
+        if(!shootReady && temps>temps1) shootReady=true;
+		//si on a passé le temps de reload et qu'il était pas pret a tirer alors on est re-pret a tirer
     }
     
     public void paintComponent(Graphics g){
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
-
-        
+        Graphics2D g2 = (Graphics2D) g;        
         castle.dessinTerCha(g);//dessin terrain, monstre chateau projectiles...
         
         if(shooting){
@@ -146,7 +191,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     }
     
 	public void mouseReleased(MouseEvent e){
-        if(shooting && shootReady){
+        if(shooting && shootReady && playing){
             XMouse1=e.getX();
             YMouse1=e.getY();
             
