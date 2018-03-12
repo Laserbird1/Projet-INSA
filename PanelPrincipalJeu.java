@@ -8,6 +8,8 @@ import java.awt.image.*;
 public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseListener,MouseMotionListener{
 	
     JButton bMenu;
+    JButton bArme;
+    JLabel labelArme;
     FenetreJeu Frame;
     Chateau castle;
     Timer t;
@@ -72,6 +74,17 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         bPause.setBounds((int)(L*6/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*2/8));
         bPause.addActionListener(this);
         add(bPause);
+	
+	labelArme = new JLabel(arme);
+	labelArme.setBounds((int)(L*5/8),(int)(H_TERRAIN+(H_SOL/2)),(int)(L*8/16),(int)(H_SOL/4));
+        Font parametre2 = new Font("Arial",Font.BOLD,30);
+	labelArme.setFont(parametre2);
+	add(labelArme);
+        
+        bArme=new JButton("Changer arme");//bouton de retour au menu
+        bArme.setBounds((int)(L*5/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*1/4));
+        bArme.addActionListener(this);
+        add(bArme);
 		
     	 	//panneau Tour
 		
@@ -132,6 +145,13 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 		if(e.getSource()==bPause){
             		pauseJouer();
         	}
+		
+		if(e.getSource()==bArme){
+		    if(arme=="Pierre")arme="Fleche";
+		    else if(arme=="Fleche")arme="Pierre";
+		    else arme="Fleche";
+		    labelArme.setText(arme);
+		}
         
         	if(e.getSource()==t){
             
