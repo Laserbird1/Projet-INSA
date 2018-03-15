@@ -16,13 +16,13 @@ public abstract class Projectile {
     
     BufferedImage image;
     
-    int g;                  //gravité, paramètre de mouvement pour la degression de la vitesse verticale
+    final int g;                  //gravité, paramètre de mouvement pour la degression de la vitesse verticale
     
     int degats;             //dégats infligés aux monstres
     int reloadTime;         //temps avant de pouvoir tirer à nouveau en ms
     
     Projectile(){
-        g=10;
+        g=7;
     }
     
     public void move(){
@@ -37,4 +37,5 @@ public abstract class Projectile {
     
     
 }
+
 
