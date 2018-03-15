@@ -18,13 +18,12 @@ public class Chateau{
     
     int L_TERRAIN;   //Hauteur et largeur du terrain total 
     int H_TERRAIN;   //(chateau et zone de déplacement des monstres et projectiles
-    
     int H_SOL;
     
-    BufferedImage image;
+    PanelPrincipalJeu panelJeu;
     
     
-    Chateau(int L_TERRAIN, int H_TERRAIN,int H_SOL){
+    Chateau(int L_TERRAIN, int H_TERRAIN,int H_SOL,PanelPrincipalJeu panelJeu){
         this.vie=VIE_MAX;
         this.L_TERRAIN=L_TERRAIN;
         this.H_TERRAIN=H_TERRAIN;
@@ -33,49 +32,32 @@ public class Chateau{
         L=(int)(L_TERRAIN/6);
         H=(int)(4*H_TERRAIN/5);
         
+        this.panelJeu=panelJeu;
+        
         listArmes=new LinkedList<Projectile>();
         listEnemis=new LinkedList<Monstre>();
     }
     
     public void dessinTerCha(Graphics g){
         
-        g.setColor(new Color(135,206,235));          //bleu ciel
-        g.fillRect(0,0,L_TERRAIN,H_TERRAIN);         //pour le ciel
-       
-        g.setColor(new Color(135, 89, 26));                                  //mordoré, marron chelou            
-        g.fillRect(0,(int)(10*H_TERRAIN/11),L_TERRAIN,(int)(H_SOL+H_TERRAIN/11));     //pour le sol 
-        
-        g.setColor(new Color(169,169,169));           //couleur gris foncé
-        g.fillRect(0,H_TERRAIN-H,L,H);                //chateau a gauche
-        
+        g.drawImage(panelJeu.imgChateau,L_TERRAIN-L,H_TERRAIN-H,panelJeu);
         g.setColor(Color.black);
-        g.drawLine(L,H_TERRAIN,L_TERRAIN,H_TERRAIN);
-        dessinHP(g);
+        g.drawLine(0,H_TERRAIN,L_TERRAIN,H_TERRAIN);
+        
+        int lBarre=(int)(L*2/3); //longeur barre (2/3 de la longueur du chateau)
+        int X=(int)(L/4);              //debut barre (coord x)
+        int Y=(int)(H_TERRAIN+H_SOL/10);//(coord y)
+        int hBarre=(int)(H_SOL/5);//hauteur barre
+        panelJeu.dessinBarre(g,lBarre,hBarre,X,Y,vie,VIE_MAX,new Color(46, 139, 87));
         
             for(Projectile proj : listArmes){
-                proj.dessin(g);
+                proj.dessin(g,panelJeu);
             }
         
             for(Monstre monster : listEnemis){
-                monster.dessin(g);
+                monster.dessin(g,panelJeu);
             }
         
-        
-    }
-    
-    public void dessinHP(Graphics g){
-        int lBarre=(int)(L*2/3); //longeur barre (2/3 de la longueur du chateau)
-        int l1=(int)(L/4);              //debut barre (coord x)
-        int y1=(int)(H_TERRAIN+H_SOL/10);//(coord y)
-        int l2=(int)(l1+(lBarre*(vie)/VIE_MAX)); //coord x séparation vert/noir
-        int l3=lBarre+l1;//coord x en pixel de la fin de la barre
-        int h=(int)(H_SOL/5);//hauteur barre
-        
-        g.setColor(new Color(46, 139, 87));//vert océan (vie restante)
-        g.fillRect(l1,y1,l2-l1,h);
-        
-        g.setColor(Color.black);//noir (vie perdue)
-        g.fillRect(l2,y1,l3-l2,h);
         
     }
     
@@ -131,4 +113,5 @@ public class Chateau{
     
     
 }
+
 
