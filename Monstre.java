@@ -59,3 +59,4 @@ public abstract class Monstre{
         g.fillRect(l2,y1,l3-l2,h);
     }
 }
+
