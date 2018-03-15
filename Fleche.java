@@ -44,7 +44,7 @@ public class Fleche extends Projectile{
     
     public void dessin(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(new Color(222, 184, 135));//brun bois
+        g2.setColor(new Color(184, 134, 11));//brun bois
         g2.setStroke(new BasicStroke(10));
         g2.draw(new Line2D.Float(centrex,centrey,(float)(centrex+l*Math.cos(teta)),(float)(centrey+l*Math.sin(teta))));
         
@@ -70,3 +70,4 @@ public class Fleche extends Projectile{
     
     
 }
+
