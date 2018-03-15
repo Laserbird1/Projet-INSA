@@ -15,8 +15,8 @@ public class Fleche extends Projectile{
     
     //centrex et centrey definissent la pointe de la fleche, centre2 le point qu'ocuppait centre a l'instant (t-1)
 
-    Fleche(double tetaIni,double vitesseIni,int l,int centrex,int centrey){ 
-        super();
+    Fleche(double tetaIni,double vitesseIni,int l,int centrex,int centrey,float g){ 
+        super(g);
         this.vitessex=(int)(vitesseIni*Math.cos(tetaIni));
         this.vitessey=(int)(vitesseIni*Math.sin(tetaIni));  //assignation des valeurs de vitesses initiales
         
@@ -27,7 +27,8 @@ public class Fleche extends Projectile{
         this.degats=2;
         
         this.l=l;
-        ///image
+        
+
     }
     
     public void move(){
@@ -42,11 +43,10 @@ public class Fleche extends Projectile{
         
     }
     
-    public void dessin(Graphics g){
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(new Color(184, 134, 11));//brun bois
-        g2.setStroke(new BasicStroke(10));
-        g2.draw(new Line2D.Float(centrex,centrey,(float)(centrex+l*Math.cos(teta)),(float)(centrey+l*Math.sin(teta))));
+    public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
+        //il faut faire tourner l'image
+        Image imgthis=ImageWorker.rotateImage(panelJeu.imgFleche,teta);
+        g.drawImage(imgthis,centrex,centrey,panelJeu);//et l'afficher
         
     }
     
@@ -59,15 +59,13 @@ public class Fleche extends Projectile{
     }
     
     public boolean collisionTerrain(Chateau castle){
-        boolean res=false;
         
         if(centrey>castle.H_TERRAIN){//si le bout de la fleche est trop bas (planté dans le sol)
-            res=true;
-        }
-        
-        return res;
+            return true;
+        }else return false;
     }
     
     
 }
+
 
