@@ -17,9 +17,7 @@ public abstract class Monstre{
     int L;          //dimensions hitbox
     int H;          //Largeur,Hauteur
     
-    Color couleur;///tant que pas de photos
-    
-   /// BufferedImage image ; //image associee au monstre
+    Color couleur;///tant que pas de photo
     
     Monstre(int L,int H){
         this.L=L;//en pixel
@@ -39,24 +37,15 @@ public abstract class Monstre{
         return res;
     }
     
-    public void dessin(Graphics g){
-        
-        g.setColor(this.couleur);
-        g.fillRect((int)(centrex), (int)(centrey),L,H);
+    public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
         
         //barre de vie
         int lBarre=L; //longeur barre (longueur du monstre)
-        int l1=(int)(centrex);              //debut barre (coord x)
-        int y1=(int)(centrey-30);           //(coord y)
-        int l2=(int)(l1+(lBarre*(vie)/VIE_MAX)); //coord x séparation vert/noir
-        int l3=lBarre+l1;//coord x en pixel de la fin de la barre
-        int h=(int)(H/6);//hauteur barre
+        int X=(int)(centrex);              //debut barre (coord x)
+        int Y=(int)(centrey-30);           //(coord y)
+        int hBarre=(int)(H/6);//hauteur barre
         
-        g.setColor(new Color(46, 139, 87));//vert océan (vie restante)
-        g.fillRect(l1,y1,l2-l1,h);
-        
-        g.setColor(Color.black);//noir (vie perdue)
-        g.fillRect(l2,y1,l3-l2,h);
+        panelJeu.dessinBarre(g,lBarre,hBarre,X,Y,vie,VIE_MAX,new Color(46, 139, 87));
     }
 }
 
