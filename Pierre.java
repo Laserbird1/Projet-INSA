@@ -8,8 +8,8 @@ import java.io.*;
 public class Pierre extends Projectile{
     int R;      //rayon de la pierre, pour la hitbox
 
-    Pierre(double tetaIni,double vitesseIni,int R,int centrex,int centrey){ 
-        super();
+    Pierre(double tetaIni,double vitesseIni,int R,int centrex,int centrey,float g){ 
+        super(g);
         this.vitessex=(int)(vitesseIni*Math.cos(tetaIni));
         this.vitessey=(int)(vitesseIni*Math.sin(tetaIni));  //assignation des valeurs de vitesses initiales
         
@@ -20,12 +20,11 @@ public class Pierre extends Projectile{
         this.degats=3;
         
         this.R=R;
-        ///image
+        
     }
     
-    public void dessin(Graphics g){
-        g.setColor(new Color(255,222,173));//Jaune blanc navaro
-        g.fillOval(centrex,centrey,2*R,2*R);
+    public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
+        g.drawImage(panelJeu.imgPierre,centrex,centrey,panelJeu);
     }
     
     public boolean collisionMonstre(Monstre monster){
@@ -48,4 +47,5 @@ public class Pierre extends Projectile{
     
     
 }
+
 
