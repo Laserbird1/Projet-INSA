@@ -18,6 +18,18 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     int H_SOL;      //hauteur de la zone d'information 
     int L;          //longueur de la fenetre et du terrain
     int H;          //hauteur de la fenetre
+    float g;
+    
+    Image imgTerrain;//toutes les images utilisées, 
+    Image imgGobelin;//on les charge ici pour éviter d'avoir a charger
+    Image imgPierre;//autant d'images que d'objets créés au 
+    Image imgFleche;//cours de la partie
+    Image imgChateau;
+    
+    int R;
+    int l;
+    int L_monstre;
+    int H_monstre;//paramètres sur les objets mouvants (servent surtout ici a retailler les images)
     
     int XMouse0;       //pos souris quand front montant du clic souris
     int YMouse0;        
@@ -26,10 +38,11 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     boolean shooting;//est on en train de tirer
     long temps1;//utile pour le temps de reload d'une arme
     boolean shootReady;
-    String arme;
-    boolean angleShootLow;
     int reloadTime;
-    String shootingMode; 
+    boolean angleShootLow;
+    
+    String arme;
+    String shootingMode;
     
     boolean playing;//pour faire pause
     JLabel labelPause;
@@ -46,26 +59,52 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         shootReady=true;
         playing=false;
         arme="Fleche";
-        shootingMode="pointing";
-        reloadTime=400;
+        shootingMode="pulling";
         angleShootLow=true;
+        reloadTime=400;//arbitraire, sera changé au premier shoot
+        g=7;
+
         
 		this.setLayout(null);
 		this.setSize(L,H);
 		
+        //initialisation param terrain
 		H_SOL=(int)(H/6);
 		H_TERRAIN=H-H_SOL;
         this.L=L;
         this.H=H;
         
-		/*
-        JPanel panelSol = new JPanel();
-		add(panelSol);
-		panelSol.setBounds(0,(int)(5*H/6),L_SOL,H_SOL);
-		panelSol.setLayout(null);
-		panelSol.setBackground(new Color(160, 82, 45));//couleur sienne
-        */
+        //initialisation param des objets
+        castle= new Chateau(L,H_TERRAIN,H_SOL,this);
+        R=(int)(L/50);//rayon d'une pierre lancée
+        l=(int)(L/25);//longueur d'une fleche
+        L_monstre=(int)(L/15);
+        H_monstre=(int)(H_TERRAIN/10);
+        
+        //chargements des images
+        imgTerrain=ImageWorker.loadImage("terrain.png");
+        ImageWorker.waitUtilFullyLoaded(imgTerrain,this);
+        imgTerrain=ImageWorker.resizeImage(imgTerrain,L,H);
+        
+        imgGobelin=ImageWorker.loadImage("gobelin.png");
+        imgGobelin=ImageWorker.resizeImage(imgGobelin,L_monstre,H_monstre);
+        
+        imgChateau=ImageWorker.loadImage("chateau.png");
+        imgChateau=ImageWorker.resizeImage(imgChateau,castle.L,castle.H);
+        
+        imgFleche=ImageWorker.loadImage("fleche.png");
+        imgFleche=ImageWorker.resizeImage(imgFleche,l,l/20);
+        
+        imgPierre=ImageWorker.loadImage("pierre.png");
+        imgPierre=ImageWorker.resizeImage(imgPierre,2*R,2*R);
+        
+        ImageWorker.waitUtilFullyLoaded(imgTerrain,this);
+		ImageWorker.waitUtilFullyLoaded(imgGobelin,this);
+		ImageWorker.waitUtilFullyLoaded(imgChateau,this);
+		ImageWorker.waitUtilFullyLoaded(imgFleche,this);
+        ImageWorker.waitUtilFullyLoaded(imgPierre,this);
 		
+        //initialisation des jbutton et jlabel
         bMenu=new JButton("Menu");//bouton de retour au menu
         bMenu.setBounds((int)(L*7/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*2/8));
         bMenu.addActionListener(this);
@@ -92,25 +131,12 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         bArme.setBounds((int)(L*5/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*1/4));
         bArme.addActionListener(this);
         add(bArme);
-        
 		
-    	 	//panneau Tour
-		
-		/*
-        JPanel panelTerrain  = new JPanel();
-		add(panelTerrain);
-		panelTerrain.setBounds(0,0,L_TERRAIN,H_TERRAIN);
-		panelTerrain.setLayout(null);
-		panelTerrain.setBackground(new Color(135,206,235));//bleu ciel
-        */
-		
-		castle= new Chateau(L,H_TERRAIN,H_SOL);
+        //initialisation des events
         addMouseListener(this);
         addMouseMotionListener(this);
-        
         t=new Timer(40,this);
 		
-		// Pour rendre la fenêtre visible
 		this.setVisible(true);
 		
 		
@@ -169,7 +195,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
             if(temps%8000==0){//toutes les 8 sec
                 Monstre newMonstre;
                 
-                newMonstre = new Gobelin(L-10,H_TERRAIN*7/8,(int)(L/15),(int)(H_TERRAIN/10),L/500);
+                newMonstre = new Gobelin(L-10,H_TERRAIN*7/8,L_monstre,H_monstre,L/500);
                 
                 castle.listEnemis.add(newMonstre);//creer un monstre
             }
@@ -188,37 +214,58 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     }
     
     public void paintComponent(Graphics g){
-        Graphics2D g2 = (Graphics2D) g;
+        
+        g.drawImage(imgTerrain,0,0,this);
+
         castle.dessinTerCha(g);//dessin terrain, monstre chateau projectiles...
         
+        
+        Graphics2D g2 = (Graphics2D) g;//dessin de la ligne pour le tir, aide au tir
         if(shooting && shootingMode=="pulling"){
 
             g2.setColor(new Color(204,0,102));
             g2.setStroke(new BasicStroke(10));
             g2.draw(new Line2D.Float(XMouse0,YMouse0,XMouse1,YMouse1));
             
-        }//dessin de la ligne pour le tir, aide au tir
-        
-        //dessin barre de rechargement du tir
-       
-        int lBarre=(int)(L*2/18); //longeur barre (2/3 de la longueur du chateau)
-        int l1=(int)(L/24);              //debut barre (coord x)
-        int y1=(int)(H_TERRAIN+H_SOL*4/10);//(coord y)
-        int l2=(int)(l1+(lBarre*(temps-temps1+reloadTime)/reloadTime)); //coord x séparation bleu/noir
-        int l3=lBarre+l1;//coord x en pixel de la fin de la barre
-        int h=(int)(H_SOL/5);//hauteur barre
-        
-        g.setColor(new Color(30, 144, 255));//bleu electrique
-        
-        if(temps>temps1){
-            g.fillRect(l1,y1,lBarre,h);
-        }else{
-            g.fillRect(l1,y1,l2-l1,h);
-        
-            g.setColor(Color.black);//noir (vie perdue)
-            g.fillRect(l2,y1,l3-l2,h);
         }
         
+        //dessin barre de rechargement du tir
+        Color  couleur=new Color(30, 144, 255);//bleu
+        int lBarre=(int)(L*2/18); //longeur barre (2/3 de la longueur du chateau)
+        int X=(int)(L/24); //debut barre (coord x)
+        int Y=(int)(H_TERRAIN+H_SOL*4/10);//(coord y)
+        float var=(temps-temps1+reloadTime);
+        int h=(int)(H_SOL/5);//hauteur barre
+       
+        dessinBarre(g,lBarre,h,X,Y,var,reloadTime,couleur);
+
+
+        
+    }
+    
+    public void dessinBarre (Graphics g,int lBarre, int hBarre, int X, int Y, float var, float ref, Color couleur){//pour dessiner barres de vie etc..
+        
+        int X2=(int)(X+(lBarre*var/ref)); //coord x séparation couleur/noir
+        int X3=lBarre+X;//coord x en pixel de la fin de la barre
+        
+        if(X2>=X && X2<=X3){
+            
+            g.setColor(couleur);//couleur
+            g.fillRect(X,Y,X2-X,hBarre);//barre de la couleur choisie
+            
+            g.setColor(Color.black);//noir (reste de la barre)
+            g.fillRect(X2,Y,X3-X2,hBarre);
+            
+        }else if(var<0){
+            
+            g.setColor(Color.black);//noir (reste de la barre)
+            g.fillRect(X,Y,lBarre,hBarre);
+            
+        }else{
+            
+            g.setColor(couleur);
+            g.fillRect(X,Y,lBarre,hBarre);
+        }
     }
 	
  
@@ -251,75 +298,32 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
             int XTir=castle.L;
             int YTir=castle.H_TERRAIN-castle.H;//coord (x,y) du point de tir du projectile
             
-            double VIni;
-            double tetaIni;
+            double [] paramIni;
             
             if(shootingMode=="pulling"){
                 //segment = vecteur avec x= Xmouse1-XMouse0 et y = YMouse1-YMouse0
+                //assimilation du segment a un vecteur cartesien (x,y) que l'on exprime en coord polaire (r,teta)
                 int x=XMouse1-XMouse0;
                 int y=YMouse1-YMouse0;
                 
-                //assimilation du segment a un vecteur cartesien (x,y) que l'on exprime en coord polaire (r,teta)
-                 VIni=-Math.sqrt(x*x+y*y)/5;//r=sqrt(x²+y²)
+                paramIni = Projectile.shootingPulling(x,y);
                 
-                if(VIni<-100) VIni=-100;//limitation de la vitesse sinon c'est cheaté
-                
-                 tetaIni = Math.atan2(y,x); //teta=atan2(x,y)
-                 
             }else if(shootingMode=="pointing"){//pointer un endroit ou le projectile passera
-                VIni=110;//vitesse initiale imposée
-                
-                if(angleShootLow){//on veut l'angle bas
-                    tetaIni=0.5*Math.PI;//parcours depuis le bas
-                    
-                    while(tetaIni<1.5*Math.PI && tetaIni>-0.5*Math.PI){//parcours de tous les angles jusqu'a ce qu'un angle convienne pour l'equation de trajectoire associée 
-                                                            //Le parcours de fait a droite ou a gauche selon la position du point visé
-                    
-                        double y=0.5*7*(XMouse1-XTir)*(XMouse1-XTir)/(VIni*VIni*Math.cos(tetaIni)*Math.cos(tetaIni))+(XMouse1-XTir)*Math.tan(tetaIni)+YTir;
-                        
-                        if( YMouse1-2<y && y<2+YMouse1) break;//pour ce teta on peut atteindre le point fixé
-                        
-                        if(((XMouse1-castle.L)>=0)) tetaIni-=0.001; //incrément du teta // si la souris est a droite du chateau increment par teta décroissant
-                        else  tetaIni+=0.001; 
-                    }
-                    
-                }else{//on veut l'angle haut
-                
-                    tetaIni=-0.5*Math.PI;;//parcours depuis le haut
-                
-                    while(tetaIni<0.5*Math.PI && tetaIni>-1.5*Math.PI){//parcours de tous les angles jusqu'a ce qu'un angle convienne pour l'equation de trajectoire associée 
-                                               //Le parcours de fait a droite ou a gauche selon la position du point visé
-                                               
-                        double y=0.5*7*(XMouse1-XTir)*(XMouse1-XTir)/(VIni*VIni*Math.cos(tetaIni)*Math.cos(tetaIni))+(XMouse1-XTir)*Math.tan(tetaIni)+YTir;
-                        
-                        if( YMouse1-5<y && y<5+YMouse1) break;//pour ce teta on peut atteindre le point fixé
-                        
-                        if(((XMouse1-castle.L)>=0)) tetaIni+=0.00001; //incrément du teta // si la souris est a droite du chateau increment par teta croissant
-                        else  tetaIni-=0.00001; 
-                    }
-                }
+                paramIni = Projectile.shootingPointing(XMouse1,YMouse1,XTir,YTir,angleShootLow,g);
                 
             }else{
-                VIni=110;
-                tetaIni=0.5*Math.PI;
-                
-                boolean trouve=false;
-                
-                while(!trouve || tetaIni>6){
-                    double y=0.5*7*(XMouse1-XTir)*(XMouse1-XTir)/(VIni*VIni*Math.cos(tetaIni)*Math.cos(tetaIni))+(XMouse1-XTir)*Math.tan(tetaIni)+YTir;
-                    if(y<3+YMouse1 && y>YMouse1-3) break;
-                    else tetaIni-=0.001;
-                }
+                paramIni = Projectile.shootingPointing(XMouse1,XMouse1,XTir,YTir,angleShootLow,g);
             }
             
-            if(arme=="Pierre") monProj=new Pierre(tetaIni,VIni,(int)(L/50),XTir,YTir);
-            else if(arme=="Fleche") monProj=new Fleche(tetaIni,VIni,(int)(L/25),XTir,YTir);
-            else monProj=new Fleche(tetaIni,VIni,(int)(L/25),XTir,YTir);
+            if(arme=="Pierre") monProj=new Pierre(paramIni[1],paramIni[0],R,XTir,YTir,g);
+            else if(arme=="Fleche") monProj=new Fleche(paramIni[1],paramIni[0],l,XTir,YTir,g);
+            else monProj=new Fleche(paramIni[1],paramIni[0],l,XTir,YTir,g);
             
             castle.listArmes.add(monProj);//ajout du nouveau projectile 
             shootReady=false;
-            temps1=temps+monProj.reloadTime;
             reloadTime=monProj.reloadTime;
+            temps1=temps+reloadTime;
+            
         }
     }
     
@@ -330,7 +334,8 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 	
     public void mouseMoved(MouseEvent e){}
 	
-    
+
 }
+
 
 
