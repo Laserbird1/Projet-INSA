@@ -21,9 +21,11 @@ public class Gobelin extends Monstre{
         
     }
     
-    
-    
-    
+ public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
+		 super.dessin(g, panelJeu);
+		 g.drawImage(panelJeu.imgGobelin,(int)(centrex),(int)(centrey),panelJeu);
+	 }
+      
 }
 
 
