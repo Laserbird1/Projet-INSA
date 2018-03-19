@@ -53,13 +53,13 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         //initialisation paramètres
         
 		this.Frame=Frame;
-        temps=0;
+        temps=-40;
         temps1=0;
         shooting=false;
         shootReady=true;
         playing=false;
         arme="Fleche";
-        shootingMode="pulling";
+        shootingMode="pointing";
         angleShootLow=true;
         reloadTime=400;//arbitraire, sera changé au premier shoot
         g=7;
@@ -78,31 +78,31 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         castle= new Chateau(L,H_TERRAIN,H_SOL,this);
         R=(int)(L/50);//rayon d'une pierre lancée
         l=(int)(L/25);//longueur d'une fleche
-        L_monstre=(int)(L/15);
-        H_monstre=(int)(H_TERRAIN/10);
+        L_monstre=(int)(L/25);
+        H_monstre=(int)(H_TERRAIN/8);
         
         //chargements des images
-        imgTerrain=ImageWorker.loadImage("terrain.png");
+        imgTerrain=ImageWorker.loadImage("terrain.png","IMAGES");
         ImageWorker.waitUtilFullyLoaded(imgTerrain,this);
         imgTerrain=ImageWorker.resizeImage(imgTerrain,L,H);
         
-        imgGobelin=ImageWorker.loadImage("gobelin.png");
+        imgGobelin=ImageWorker.loadImage("gobelin.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgGobelin,this);
         imgGobelin=ImageWorker.resizeImage(imgGobelin,L_monstre,H_monstre);
         
-        imgChateau=ImageWorker.loadImage("chateau.png");
+        imgChateau=ImageWorker.loadImage("chateau.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgChateau,this);
         imgChateau=ImageWorker.resizeImage(imgChateau,castle.L,castle.H);
         
-        imgFleche=ImageWorker.loadImage("fleche.png");
-        imgFleche=ImageWorker.resizeImage(imgFleche,l,l/20);
+        imgFleche=ImageWorker.loadImage("fleche.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgFleche,this);
+        imgFleche=ImageWorker.resizeImage(imgFleche,l,l/2);
         
-        imgPierre=ImageWorker.loadImage("pierre.png");
+        imgPierre=ImageWorker.loadImage("pierre.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgPierre,this);
         imgPierre=ImageWorker.resizeImage(imgPierre,2*R,2*R);
         
-        ImageWorker.waitUtilFullyLoaded(imgTerrain,this);
-		ImageWorker.waitUtilFullyLoaded(imgGobelin,this);
-		ImageWorker.waitUtilFullyLoaded(imgChateau,this);
-		ImageWorker.waitUtilFullyLoaded(imgFleche,this);
-        ImageWorker.waitUtilFullyLoaded(imgPierre,this);
+
 		
         //initialisation des jbutton et jlabel
         bMenu=new JButton("Menu");//bouton de retour au menu
@@ -336,6 +336,3 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 	
 
 }
-
-
-
