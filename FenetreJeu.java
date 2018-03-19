@@ -10,11 +10,13 @@ public class FenetreJeu extends JFrame implements ActionListener{
 	JButton bQuitter;
 	JButton bOptions;
 	JPanel panelMenu;
-    JPanel panelDefaite;
-    JButton bRejouer;
-    JLabel labelPerdu;
+   	JPanel panelDefaite;
+   	JButton bRejouer;
+   	JLabel labelPerdu;
 	PanelPrincipalJeu panelJeu;
 	PanelOptions panelOptions;
+	AudioClip ac; 
+	boolean musicONOFF;
 	
 	public FenetreJeu(){
 
@@ -24,7 +26,10 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		int tailleButtonL=(int)(L/12);
 		int tailleButtonH=(int)(H/12);
 		
-		
+		URL url = FenetreJeu.class.getResource("sunchinelong.wav");
+		ac = Applet.newAudioClip(url);
+		musicONOFF=true;
+		playSound();
 
 		this.setTitle("Jeu Tower defense  ");
 		this.setLayout(null);
@@ -124,6 +129,16 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		}
         
 		
+	}
+	
+	public void playSound() { //Instructions pour la musique
+		ac.loop();
+		lecture = true;
+	}
+ 
+	public void stopSound() {
+		ac.stop();
+		lecture = false;
 	}
 	
 	public static void main (String [] args){
