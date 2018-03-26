@@ -22,6 +22,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     
     Image imgTerrain;//toutes les images utilisées, 
     Image imgGobelin;//on les charge ici pour éviter d'avoir a charger
+    Image imgGobelinVolant;
     Image imgPierre;//autant d'images que d'objets créés au 
     Image imgFleche;//cours de la partie
     Image imgChateau;
@@ -30,6 +31,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     int l;
     int L_monstre;
     int H_monstre;//paramètres sur les objets mouvants (servent surtout ici a retailler les images)
+    int tpsApp;//ms
     
     int XMouse0;       //pos souris quand front montant du clic souris
     int YMouse0;        
@@ -63,6 +65,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         angleShootLow=true;
         reloadTime=400;//arbitraire, sera changé au premier shoot
         g=7;
+        tpsApp=3000;
 
         
 		this.setLayout(null);
@@ -89,6 +92,10 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         imgGobelin=ImageWorker.loadImage("gobelin.png","IMAGES");
         ImageWorker.waitUtilFullyLoaded(imgGobelin,this);
         imgGobelin=ImageWorker.resizeImage(imgGobelin,L_monstre,H_monstre);
+        
+        imgGobelinVolant=ImageWorker.loadImage("gobelinVolant.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgGobelinVolant,this);
+        imgGobelinVolant=ImageWorker.resizeImage(imgGobelinVolant,L_monstre,H_monstre);
         
         imgChateau=ImageWorker.loadImage("chateau.png","IMAGES");
         ImageWorker.waitUtilFullyLoaded(imgChateau,this);
@@ -192,13 +199,18 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
             temps+=40;//temps defile
             castle.move();//tout bouge
             
-            if(temps%8000==0){//toutes les 8 sec
+            if(temps%tpsApp==0){//toutes les tpsApp sec
+				
+				tpsApp=(int)((6000/40.0)+(Math.random()*(3000/40.0)))*40;//le monstre suivant apparait dans entre 6 et 9 sec
+				
                 Monstre newMonstre;
-                
-                newMonstre = new Gobelin(L-10,H_TERRAIN*7/8,L_monstre,H_monstre,L/500);
-                
+				newMonstre = new Gobelin(L-10,H_TERRAIN*7.0/8.0,L_monstre,H_monstre,L/500.0);
                 castle.listEnemis.add(newMonstre);//creer un monstre
+                
+                
             }
+            if(Math.random()<0.01) 
+				castle.listEnemis.add(new GobelinVolant(L-10,H_TERRAIN*2.0/8.0,L_monstre,H_monstre,L/500));
             
             boolean plusDeVie=castle.collisions();//tester les collisions
             if(plusDeVie){ 
