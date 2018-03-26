@@ -27,7 +27,7 @@ public class PanelOptions extends JPanel implements ActionListener {
         int H_BOUTON=(int)(H/12);
 		
 		JLabel mesOptions = new JLabel("Options");
-		mesOptions.setBounds((int)(2*L/5),(int)(H/7), (int)(L/5), (int)(H/24));
+		mesOptions.setBounds((int)(2*L/5),(int)(H/7), (int)(L/5), (int)(H/14));
 		Font parametre = new Font("Arial",Font.BOLD,75);
 		mesOptions.setFont(parametre);
 		add(mesOptions);
