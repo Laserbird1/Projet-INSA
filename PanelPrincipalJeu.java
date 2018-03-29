@@ -72,8 +72,8 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         add(bMenu);
         
         labelPause = new JLabel("Appuyer sur start pour jouer");
-		labelPause.setBounds((int)(L/2),(int)((H_TERRAIN+H_SOL)/2),(int)(L*8/16),(int)(H_SOL));
-		Font parametre = new Font("Arial",Font.BOLD,75);
+		labelPause.setBounds((int)(2*L/5),(int)((H_TERRAIN+H_SOL)/2),(int)(L*8/16),(int)(H_SOL));
+		Font parametre = new Font("Arial",Font.BOLD,50);
 		labelPause.setFont(parametre);
 		add(labelPause);
         
