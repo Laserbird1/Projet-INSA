@@ -89,8 +89,8 @@ public class FenetreJeu extends JFrame implements ActionListener{
         
         //message pour annoncer la defaite
         labelPerdu = new JLabel("Vous avez perdu");
-		labelPerdu.setBounds((int)(L*2/5),(int)(H*2/5), (int)(L/5), (int)(H/7));
-		Font parametre = new Font("Arial",Font.BOLD,75);
+		labelPerdu.setBounds((int)(L*7/20),(int)(H*2/5), (int)(4*L/5), (int)(H/7));
+		Font parametre = new Font("Arial",Font.BOLD,50);
 		labelPerdu.setFont(parametre);
 		panelDefaite.add(labelPerdu);
         
