@@ -27,7 +27,7 @@ public class PanelOptions extends JPanel implements ActionListener {
         int H_BOUTON=(int)(H/12);
 		
 		JLabel mesOptions = new JLabel("Options");
-		mesOptions.setBounds((int)(2*L/5),(int)(H/7), (int)(L/5), (int)(H/14));
+		mesOptions.setBounds((int)(2*L/5),(int)(H/7), (int)(L/5), (int)(H/24));
 		Font parametre = new Font("Arial",Font.BOLD,75);
 		mesOptions.setFont(parametre);
 		add(mesOptions);
@@ -86,19 +86,33 @@ public class PanelOptions extends JPanel implements ActionListener {
                 
                 Frame.panelJeu.arme=choixArmes.getSelectedCheckbox().getLabel();
                 Frame.panelJeu.labelArme.setText(choixArmes.getSelectedCheckbox().getLabel());
-                Frame.panelJeu.shootingMode=choixModeTir.getSelectedCheckbox().getLabel();
                 
-                if(choixMusique.getSelectedCheckbox().getLabel()=="ON")
-                    Frame.musicONOFF=true;
-			Frame.playSound();
-                else
-                    Frame.musicONOFF=false;
-			Frame.stopSound();
+                String shootMode =choixModeTir.getSelectedCheckbox().getLabel();
+                Frame.panelJeu.shootingMode=shootMode;
+                if(shootMode=="pulling"){
+                    Frame.panelJeu.bHighAngle.setVisible(false);
+                    Frame.panelJeu.bLowAngle.setVisible(false);
+                }else{
+                    Frame.panelJeu.bHighAngle.setVisible(true);
+                    Frame.panelJeu.bLowAngle.setVisible(true);
+                }
+                
+                
+                
+                if(choixMusique.getSelectedCheckbox().getLabel()=="ON"){
+                    Frame.playSound();
+                }
+                else{
+                    Frame.stopSound();
+                }
+                    
+                    
                 
             	Frame.setContentPane(Frame.panelMenu);
       		}
            
 	}
 }
+
 
 
