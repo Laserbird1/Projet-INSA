@@ -1,17 +1,16 @@
 import java.awt.*;
 import javax.swing.*;
-import javax.imageio.*;
 import java.awt.geom.*;
 import java.awt.image.*;
-import java.io.*;
+import java.util.*;
 
 public class Pierre extends Projectile{
     int R;      //rayon de la pierre, pour la hitbox
-
-    Pierre(double tetaIni,double vitesseIni,int R,int centrex,int centrey,float g){ 
+    
+    Pierre(double tetaIni,double vitesseIni,int R,double centrex,double centrey,float g){ 
         super(g);
-        this.vitessex=(int)(vitesseIni*Math.cos(tetaIni));
-        this.vitessey=(int)(vitesseIni*Math.sin(tetaIni));  //assignation des valeurs de vitesses initiales
+        this.vitessex=vitesseIni*Math.cos(tetaIni);
+        this.vitessey=vitesseIni*Math.sin(tetaIni);  //assignation des valeurs de vitesses initiales
         
         this.centrex=centrex; //positionnement initial
         this.centrey=centrey;
@@ -24,7 +23,8 @@ public class Pierre extends Projectile{
     }
     
     public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
-        g.drawImage(panelJeu.imgPierre,centrex,centrey,panelJeu);
+        
+        g.drawImage(panelJeu.imgPierre,(int)centrex,(int)centrey,panelJeu);
     }
     
     public boolean collisionMonstre(Monstre monster){
@@ -45,7 +45,10 @@ public class Pierre extends Projectile{
         return res;
     }
     
+    public String toString(){ return "Pierre";}
+    
     
 }
+
 
 
