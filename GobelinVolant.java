@@ -24,13 +24,17 @@ public class GobelinVolant extends Monstre{
   
 
 	  public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
-		 super.dessin(g, panelJeu);
-		 g.drawImage(panelJeu.imgGobelinVolant,(int)(centrex),(int)(centrey),panelJeu);
+        super.dessin(g, panelJeu);
+        g.drawImage(panelJeu.imgGobelinVolant,(int)(centrex),(int)(centrey),panelJeu);
 	 }
 	 
 	 public void move(){
-		 super.move();
-		 centrey=H*Math.sin(2*L*centrex)+y_init; 
+        this.centrex-=vitesse;
+        centrey=H*Math.cos(L*centrex/10000.0)+y_init; 
 	}
-	  
+    
+    public String toString (){
+        return "Gobelin Volant";
+    } 
 }
+
