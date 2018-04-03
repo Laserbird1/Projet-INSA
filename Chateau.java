@@ -40,7 +40,7 @@ public class Chateau{
     
     public void dessinTerCha(Graphics g){
         
-        g.drawImage(panelJeu.imgChateau,L_TERRAIN-L,H_TERRAIN-H,panelJeu);
+        g.drawImage(panelJeu.imgChateau,0,H_TERRAIN-H,panelJeu);
         g.setColor(Color.black);
         g.drawLine(0,H_TERRAIN,L_TERRAIN,H_TERRAIN);
         
@@ -75,43 +75,60 @@ public class Chateau{
         }
     }
     
-    public boolean collisions(){//le booleen retourne la defaite si le chateau n'a plus de vie
-        boolean res=false;
+    public void collisions(){//le booleen retourne la defaite si le chateau n'a plus de vie
+        
+        LinkedList<Projectile> ajoutFrag=new LinkedList<Projectile>();
+        Projectile aRetirer=null;
+        Monstre aRetirerAussi=null;
         
         if(listArmes.size()!=0){
             for(Projectile proj: listArmes){//pour tous les projectiles
-                if(proj.collisionTerrain(this)){//le projectile touche t il le sol ?
-                    listArmes.remove(proj);//si oui le projectile disparait
+                
+                if(proj.collisionTerrain(this)){//le projectile touche t il le sol ? si oui alors :
+                    
+                    if(proj.toString().equals("PierreFrag")){ ajoutFrag.addAll(proj.fragmentation());}
+                    
+                    aRetirer=proj;
+                    
                     break;
                 }
                 
                 for(Monstre monster:listEnemis){//pour ce projectile et chaque monstre
-                    if(proj.collisionMonstre(monster)){//le projectile touche t il un monstre ?
-                        monster.vie-=proj.degats;
-                        if(monster.vie<=0) listEnemis.remove(monster);//si oui le monstre perd de la vie et peut disparaitre 
-                        listArmes.remove(proj);//le projectile disparait
+                    if(proj.collisionMonstre(monster)){//le projectile touche t il un monstre ? si oui alors : 
+                        
+                        monster.vie-=proj.degats;//perte de pt de vie
+                        if(monster.vie<=0){
+                            panelJeu.score++;
+                            aRetirerAussi=monster;//et on retire le monstre s'il meurt
+                        }
+                        
+                        if(proj.toString().equals("PierreFrag")){ ajoutFrag.addAll(proj.fragmentation());}
+                        
+                        aRetirer=proj;
+                    
                         break;
                     }
                 }
             }
         }
         
+        if(aRetirerAussi!=null) listEnemis.remove(aRetirerAussi);
+        if(aRetirer!=null) listArmes.remove(aRetirer);
+        panelJeu.labelScore.setText(Integer.toString(panelJeu.score));
+        
         if(listEnemis.size()!=0){ 
             for(Monstre monster:listEnemis){//pour tous les monstres
                 if(monster.collisionChateau(this)){//touchent t ils le chateau?
                     vie-=monster.degats;
                     listEnemis.remove(monster);//si oui il fait des degats et disparait
-                    if(vie<=0) res= true;
                     break;
                 }
             }
         }
         
-        return res;
-        
+        if(aRetirerAussi!=null) listEnemis.remove(aRetirerAussi);
+        if(!ajoutFrag.isEmpty()) listArmes.addAll(ajoutFrag);
     }
     
     
 }
-
-
