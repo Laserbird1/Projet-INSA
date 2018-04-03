@@ -8,16 +8,17 @@ import java.util.*;
 
 public abstract class Projectile {
     
-    int vitessex;           //vitesse sur chaque axe
-    int vitessey;
+    double vitessex;           //vitesse sur chaque axe
+    double vitessey;
     
-    int centrex;            //centre de gravité, référentiel à partir duquel est créé l'image du projectile, permet le déplacement facile du projectile
-    int centrey;
+    double centrex;            //centre de gravité, référentiel à partir duquel est créé l'image du projectile, permet le déplacement facile du projectile
+    double centrey;
     
     final float g;            //gravité, paramètre de mouvement pour la degression de la vitesse verticale
     
     int degats;             //dégats infligés aux monstres
     int reloadTime;         //temps avant de pouvoir tirer à nouveau en ms
+
     
     Projectile(float g){
         this.g=g;
@@ -51,7 +52,7 @@ public abstract class Projectile {
         double[]res = new double [2];
         //res[0]=VIni et res[1]=tetaIni
         //(X1,Y1) coord du point a atteindre en partant de (XTir,YTir)
-        res[0]=110;//vitesse initiale imposée
+        res[0]=60;//vitesse initiale imposée
                 
         if(angleShootLow){//on veut l'angle bas
             res[1]=0.5*Math.PI;//parcours depuis le bas
@@ -85,7 +86,11 @@ public abstract class Projectile {
             
         return res;
     }
+    
+    public abstract String toString();
+    public LinkedList<Projectile> fragmentation(){return new LinkedList<Projectile>();}
 }
+
 
 
 
