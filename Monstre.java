@@ -17,7 +17,7 @@ public abstract class Monstre{
     int L;          //dimensions hitbox
     int H;          //Largeur,Hauteur
     
-    Color couleur;///tant que pas de photo
+    boolean boss;
     
     Monstre(int L,int H){
         this.L=L;//en pixel
@@ -47,5 +47,8 @@ public abstract class Monstre{
         
         panelJeu.dessinBarre(g,lBarre,hBarre,X,Y,vie,VIE_MAX,new Color(46, 139, 87));
     }
+    
+    public abstract String toString();
 }
+
 
