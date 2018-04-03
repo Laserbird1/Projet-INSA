@@ -1,24 +1,23 @@
 import java.awt.*;
 import javax.swing.*;
-import javax.imageio.*;
 import java.awt.geom.*;
 import java.awt.image.*;
-import java.io.*;
+import java.util.*;
 
 public class Fleche extends Projectile{
     
     float l;     //longueur de la fleche
     double teta; //orientation de la flèche
     
-    int centre2x;
-    int centre2y;//deuxième centre de la flèche (=point centre(t-1)) pour definir teta
+    double centre2x;
+    double centre2y;//deuxième centre de la flèche (=point centre(t-1)) pour definir teta
     
     //centrex et centrey definissent la pointe de la fleche, centre2 le point qu'ocuppait centre a l'instant (t-1)
 
-    Fleche(double tetaIni,double vitesseIni,int l,int centrex,int centrey,float g){ 
+    Fleche(double tetaIni,double vitesseIni,int l,double centrex,double centrey,float g){ 
         super(g);
-        this.vitessex=(int)(vitesseIni*Math.cos(tetaIni));
-        this.vitessey=(int)(vitesseIni*Math.sin(tetaIni));  //assignation des valeurs de vitesses initiales
+        this.vitessex=vitesseIni*Math.cos(tetaIni);
+        this.vitessey=vitesseIni*Math.sin(tetaIni);  //assignation des valeurs de vitesses initiales
         
         this.centrex=centrex; //positionnement initial
         this.centrey=centrey;
@@ -46,7 +45,7 @@ public class Fleche extends Projectile{
     public void dessin(Graphics g,PanelPrincipalJeu panelJeu){
         //il faut faire tourner l'image
         Image imgthis=ImageWorker.rotateImage(panelJeu.imgFleche,teta);
-        g.drawImage(imgthis,centrex,centrey,panelJeu);//et l'afficher
+        g.drawImage(imgthis,(int)centrex,(int)centrey,panelJeu);//et l'afficher
         
     }
     
@@ -65,7 +64,8 @@ public class Fleche extends Projectile{
         }else return false;
     }
     
-    
+    public String toString(){ return "Fleche";}
 }
+
 
 
