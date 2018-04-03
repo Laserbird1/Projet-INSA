@@ -19,19 +19,22 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     int L;          //longueur de la fenetre et du terrain
     int H;          //hauteur de la fenetre
     float g;
+    int score;
+    boolean vagueBoss;
     
     Image imgTerrain;//toutes les images utilisées, 
     Image imgGobelin;//on les charge ici pour éviter d'avoir a charger
-    Image imgGobelinVolant;
     Image imgPierre;//autant d'images que d'objets créés au 
     Image imgFleche;//cours de la partie
     Image imgChateau;
+    Image imgGobelinVolant;
+    Image imgBoss;
+    Image imgPierreBig;
     
     int R;
     int l;
     int L_monstre;
     int H_monstre;//paramètres sur les objets mouvants (servent surtout ici a retailler les images)
-    int tpsApp;//ms
     
     int XMouse0;       //pos souris quand front montant du clic souris
     int YMouse0;        
@@ -42,6 +45,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     boolean shootReady;
     int reloadTime;
     boolean angleShootLow;
+    int tpsApp;//ms
     
     String arme;
     String shootingMode;
@@ -49,13 +53,16 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
     boolean playing;//pour faire pause
     JLabel labelPause;
     JButton bPause;
+    JButton bHighAngle;
+    JButton bLowAngle;
+    JLabel labelScore;
     
 	public PanelPrincipalJeu(int L, int H,FenetreJeu Frame) {
 		
         //initialisation paramètres
         
 		this.Frame=Frame;
-        temps=-40;
+        temps=0;
         temps1=0;
         shooting=false;
         shootReady=true;
@@ -64,8 +71,9 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         shootingMode="pointing";
         angleShootLow=true;
         reloadTime=400;//arbitraire, sera changé au premier shoot
-        g=7;
+        g=2;
         tpsApp=3000;
+        score=0;
 
         
 		this.setLayout(null);
@@ -93,10 +101,6 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         ImageWorker.waitUtilFullyLoaded(imgGobelin,this);
         imgGobelin=ImageWorker.resizeImage(imgGobelin,L_monstre,H_monstre);
         
-        imgGobelinVolant=ImageWorker.loadImage("gobelinVolant.png","IMAGES");
-        ImageWorker.waitUtilFullyLoaded(imgGobelinVolant,this);
-        imgGobelinVolant=ImageWorker.resizeImage(imgGobelinVolant,L_monstre,H_monstre);
-        
         imgChateau=ImageWorker.loadImage("chateau.png","IMAGES");
         ImageWorker.waitUtilFullyLoaded(imgChateau,this);
         imgChateau=ImageWorker.resizeImage(imgChateau,castle.L,castle.H);
@@ -108,12 +112,21 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         imgPierre=ImageWorker.loadImage("pierre.png","IMAGES");
         ImageWorker.waitUtilFullyLoaded(imgPierre,this);
         imgPierre=ImageWorker.resizeImage(imgPierre,2*R,2*R);
+        imgPierreBig=ImageWorker.resizeImage(imgPierre,2.5*R,2.5*R);
+        
+        imgGobelinVolant=ImageWorker.loadImage("gobelinVolant.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgGobelinVolant,this);
+        imgGobelinVolant=ImageWorker.resizeImage(imgGobelinVolant,L_monstre,H_monstre);
+        
+        imgBoss=ImageWorker.loadImage("boss.png","IMAGES");
+        ImageWorker.waitUtilFullyLoaded(imgBoss,this);
+        imgBoss=ImageWorker.resizeImage(imgBoss,3*L_monstre,3*H_monstre);
         
 
 		
         //initialisation des jbutton et jlabel
         bMenu=new JButton("Menu");//bouton de retour au menu
-        bMenu.setBounds((int)(L*7/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*2/8));
+        bMenu.setBounds((int)(L*14/16),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*2/8));
         bMenu.addActionListener(this);
         add(bMenu);
         
@@ -124,20 +137,41 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 		add(labelPause);
         
         bPause=new JButton("Start");//bouton start/pause
-        bPause.setBounds((int)(L*6/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*1/4));
+        bPause.setBounds((int)(L*13/16),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*1/4));
         bPause.addActionListener(this);
         add(bPause);
         
         labelArme = new JLabel(arme);
-		labelArme.setBounds((int)(L*5/8),(int)(H_TERRAIN+(H_SOL/2)),(int)(L*8/16),(int)(H_SOL/4));
+		labelArme.setBounds((int)(L*12/16),(int)(H_TERRAIN+(H_SOL/2)),(int)(L*8/16),(int)(H_SOL/4));
         Font parametre2 = new Font("Arial",Font.BOLD,30);
 		labelArme.setFont(parametre2);
 		add(labelArme);
         
         bArme=new JButton("Changer arme");//bouton de retour au menu
-        bArme.setBounds((int)(L*5/8),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*1/4));
+        bArme.setBounds((int)(L*12/16),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/16),(int)(H_SOL*1/4));
         bArme.addActionListener(this);
         add(bArme);
+        
+        bHighAngle=new JButton("H");//
+        bHighAngle.setBounds((int)(L*10/16),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/30),(int)(L*1/30));
+        bHighAngle.addActionListener(this);
+        add(bHighAngle);
+        
+        bLowAngle=new JButton("L");//
+        bLowAngle.setBounds((int)(L*10/16-L*1/30),(int)(H_TERRAIN+H_SOL/4),(int)(L*1/30),(int)(L*1/30));
+        bLowAngle.addActionListener(this);
+        bLowAngle.setBackground(Color.green);
+        add(bLowAngle);
+        
+        labelScore= new JLabel(Integer.toString(score));
+		labelScore.setBounds((int)(L*1/16),(int)(H_TERRAIN/15),(int)(L*8/16),(int)(H_SOL/4));
+		labelScore.setFont(parametre2);
+		add(labelScore);
+        
+        if(shootingMode=="pulling"){
+            bHighAngle.setVisible(false);
+            bLowAngle.setVisible(false);
+        }
 		
         //initialisation des events
         addMouseListener(this);
@@ -145,6 +179,8 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         t=new Timer(40,this);
 		
 		this.setVisible(true);
+        
+        castle.listEnemis.add(new GobelinVolant(L-10,H_TERRAIN*2.0/8.0,L_monstre,H_monstre,L/500));
 		
 		
 	}
@@ -155,6 +191,7 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         castle.listArmes.clear();
         pause();
         labelPause.setText("Appuyer sur start pour jouer");
+        score=0;
     }
     
     public void pauseJouer(){
@@ -189,9 +226,22 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
         
         if(e.getSource()==bArme){
             if(arme=="Pierre")arme="Fleche";
-            else if(arme=="Fleche")arme="Pierre";
+            else if(arme=="Fleche")arme="Pierre Frag";
+            else if(arme=="Pierre Frag")arme="Pierre";
             else arme="Fleche";
             labelArme.setText(arme);
+        }
+        
+        if(e.getSource()==bHighAngle){
+            bHighAngle.setBackground(Color.green);
+            bLowAngle.setBackground(Color.white);
+            angleShootLow=false;
+        }
+        
+        if(e.getSource()==bLowAngle){
+            bHighAngle.setBackground(Color.white);
+            bLowAngle.setBackground(Color.green);
+            angleShootLow=true;
         }
         
         if(e.getSource()==t){
@@ -204,16 +254,26 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 				tpsApp=(int)((6000/40.0)+(Math.random()*(3000/40.0)))*40;//le monstre suivant apparait dans entre 6 et 9 sec
 				
                 Monstre newMonstre;
-				newMonstre = new Gobelin(L-10,H_TERRAIN*7.0/8.0,L_monstre,H_monstre,L/500.0);
+				newMonstre = new Gobelin(L-10,H_TERRAIN*7.0/8.0,L_monstre,H_monstre,L/500.0,false);
                 castle.listEnemis.add(newMonstre);//creer un monstre
-                
-                
             }
-            if(Math.random()<0.01) 
-				castle.listEnemis.add(new GobelinVolant(L-10,H_TERRAIN*2.0/8.0,L_monstre,H_monstre,L/500));
             
-            boolean plusDeVie=castle.collisions();//tester les collisions
-            if(plusDeVie){ 
+            if(Math.random()<0.01) 
+				castle.listEnemis.add(new GobelinVolant(L-10,H_TERRAIN*2.0/8.0,L_monstre,H_monstre,L/500.0));
+                
+            if(!vagueBoss && score%15==0){
+                    for(int k=1;k<=score/15;k++)
+                    castle.listEnemis.add(new Gobelin((int)(L-10+(k-1)*3*L_monstre),H_TERRAIN*7.0/8.0,L_monstre,H_monstre,L/500.0,true));//ajout de boss en fonction du score pour rendre le jeu plus difficile
+                    vagueBoss=true;//la vague de boss est en cours
+                }
+            
+            if(score%15==1){
+                vagueBoss=false;//la vague de boss est passée, on attend la suivante
+            }
+
+            
+            castle.collisions();//tester les collisions
+            if(castle.vie<=0){ 
                 pause();
                 Frame.setContentPane(Frame.panelDefaite);//si on a plus de vie, afficher le panel defaite
             }
@@ -307,10 +367,10 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
             shooting=false;//on est plus en cours de tir
             
             Projectile monProj;//donc on peut tirer un projectile
-            int XTir=castle.L;
-            int YTir=castle.H_TERRAIN-castle.H;//coord (x,y) du point de tir du projectile
+            int XTir=(int)(castle.L*0.7);
+            int YTir=(int)(castle.H_TERRAIN-castle.H*0.95);//coord (x,y) du point de tir du projectile
             
-            double [] paramIni;
+            double [] paramIni;//[0] -> Vitesse initiale / [1] ->angle de tir initial
             
             if(shootingMode=="pulling"){
                 //segment = vecteur avec x= Xmouse1-XMouse0 et y = YMouse1-YMouse0
@@ -327,9 +387,10 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
                 paramIni = Projectile.shootingPointing(XMouse1,XMouse1,XTir,YTir,angleShootLow,g);
             }
             
-            if(arme=="Pierre") monProj=new Pierre(paramIni[1],paramIni[0],R,XTir,YTir,g);
-            else if(arme=="Fleche") monProj=new Fleche(paramIni[1],paramIni[0],l,XTir,YTir,g);
-            else monProj=new Fleche(paramIni[1],paramIni[0],l,XTir,YTir,g);
+            if(arme=="Pierre") monProj=new Pierre(paramIni[1],paramIni[0],R,XTir,YTir,g);//pierre simple
+            else if(arme=="Fleche") monProj=new Fleche(paramIni[1],paramIni[0],l,XTir,YTir,g);//fleche
+            else if(arme=="Pierre Frag") monProj=new PierreFrag(paramIni[1],paramIni[0],(int)(R*3/2.0),XTir,YTir,g);//pierre frag
+            else monProj=new Fleche(paramIni[1],paramIni[0],l,XTir,YTir,g);//si pb alors fleche
             
             castle.listArmes.add(monProj);//ajout du nouveau projectile 
             shootReady=false;
@@ -348,3 +409,4 @@ public class PanelPrincipalJeu extends JPanel implements ActionListener, MouseLi
 	
 
 }
+
