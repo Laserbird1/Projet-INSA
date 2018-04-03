@@ -1,6 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.net.URL;
+import java.io.*;
+import javax.sound.sampled.*;
 
 
 public class FenetreJeu extends JFrame implements ActionListener{
@@ -15,8 +20,8 @@ public class FenetreJeu extends JFrame implements ActionListener{
    	JLabel labelPerdu;
 	PanelPrincipalJeu panelJeu;
 	PanelOptions panelOptions;
-	AudioClip ac; 
-	boolean musicONOFF;
+    AudioClip ac; 
+    
 	
 	public FenetreJeu(){
 
@@ -26,10 +31,7 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		int tailleButtonL=(int)(L/12);
 		int tailleButtonH=(int)(H/12);
 		
-		URL url = FenetreJeu.class.getResource("sunchinelong.wav");
-		ac = Applet.newAudioClip(url);
-		musicONOFF=true;
-		playSound();
+
 
 		this.setTitle("Jeu Tower defense  ");
 		this.setLayout(null);
@@ -100,6 +102,35 @@ public class FenetreJeu extends JFrame implements ActionListener{
 		panelDefaite.add(labelPerdu);
         
         setContentPane(panelMenu);//accès panel menu
+        
+        try
+        {
+            URL url = FenetreJeu.class.getResource("Sunshine.wav");
+            ac = Applet.newAudioClip(url);
+        }
+        catch (Exception exc)
+        {
+            exc.printStackTrace(System.out);
+        }
+        
+        playSound();
+       /* 
+        try
+        {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new File("Sunshine.wav")));
+            clip.start();
+        }
+        catch (Exception exc)
+        {
+            exc.printStackTrace(System.out);
+        }
+        */
+       
+        
+       //son = new Audio();
+       //son.playSound();
+        
 		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,24 +159,24 @@ public class FenetreJeu extends JFrame implements ActionListener{
             this.setContentPane(panelJeu);//accès au panel de jeu
 		}
         
-		
-	}
-	
-	public void playSound() { //Instructions pour la musique
-		ac.loop();
-		lecture = true;
-	}
- 
-	public void stopSound() {
-		ac.stop();
-		lecture = false;
-	}
+    }
+    
+    public void playSound() {
+        ac.loop();
+    }
+    
+    public void stopSound(){
+       ac.stop();
+    }
 	
 	public static void main (String [] args){
 		FenetreJeu maFenetre = new FenetreJeu();//executer la fenetre
 	}
+    
+    
 	
 }
+
 
 
 
